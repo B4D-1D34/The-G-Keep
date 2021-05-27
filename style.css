@@ -1,0 +1,125 @@
+.mainContainer {
+  width: 500px;
+  margin: 0 auto;
+}
+
+.inputForm {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.addNoteInput {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 20px;
+  font-size: 20px;
+  border: none;
+  border-radius: 10px;
+  background-color: transparent;
+}
+
+.addNoteInput:focus {
+  outline: none;
+}
+
+.formButton {
+  border: none;
+  padding: 10px 20px;
+  background-color: transparent;
+  cursor: pointer;
+  border-radius: 20px;
+}
+
+.formButton:hover {
+  background-color: rgba(0, 0, 0, 0.035);
+}
+
+.formButton:active {
+  background-color: #ccc;
+}
+
+.colorBtnWrapper {
+  position: relative;
+  width: max-content;
+}
+
+.colorBtnWrapper:hover .colorPalette {
+  visibility: visible;
+  opacity: 1;
+}
+
+.colorPalette {
+  opacity: 0;
+  visibility: hidden;
+  width: 105px;
+  flex-wrap: wrap;
+  display: flex;
+  position: absolute;
+  left: 5px;
+  bottom: 35px;
+  padding: 5px 0 0 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  background-color: #fff;
+  transition: all 0.2s;
+}
+
+.color {
+  cursor: pointer;
+  width: 27px;
+  height: 27px;
+  border-radius: 50px;
+  margin-right: 5px;
+  margin-bottom: 5px;
+  border: 1px solid transparent;
+}
+
+.color:hover {
+  border: 1px solid black;
+}
+
+.note {
+  padding: 20px;
+  border: 1px solid #666;
+  margin-top: 20px;
+  border-radius: 10px;
+}
+
+.note:hover {
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.red {
+  background-color: crimson;
+}
+
+.green {
+  background-color: lightgreen;
+}
+
+.yellow {
+  background-color: yellow;
+}
+
+.blue {
+  background-color: lightskyblue;
+}
+.orange {
+  background-color: orange;
+}
+.violet {
+  background-color: violet;
+}
+.brown {
+  background-color: burlywood;
+}
+.pink {
+  background-color: pink;
+}
+.gray {
+  background-color: lightgray;
+}
+
+.hidden {
+  display: none;
+}

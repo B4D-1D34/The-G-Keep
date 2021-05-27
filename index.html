@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <title>G keep</title>
+  </head>
+  <body>
+    <div class="mainContainer" id="container">
+      <form id="mainInput" class="inputForm" autocomplete="off">
+        <input
+          class="addNoteInput hidden"
+          id="titleInput"
+          placeholder="Введите заголовок"
+          type="text"
+        />
+        <input
+          class="addNoteInput"
+          id="textInput"
+          placeholder="Заметка..."
+          type="text"
+        />
+        <button id="notificationBtn" class="formButton hidden">
+          Создать напоминание
+        </button>
+        <div class="colorBtnWrapper hidden">
+          <button id="colorBtn" class="formButton">Изменить цвет</button>
+          <input type="hidden" id="colorInput" />
+
+          <div id="colorPalette" class="colorPalette">
+            <div class="color red"></div>
+            <div class="color green"></div>
+            <div class="color yellow"></div>
+            <div class="color blue"></div>
+            <div class="color orange"></div>
+            <div class="color violet"></div>
+            <div class="color brown"></div>
+            <div class="color pink"></div>
+            <div class="color gray"></div>
+          </div>
+        </div>
+        <button id="archiveBtn" class="formButton hidden">Архивировать</button>
+        <button id="pinBtn" class="formButton hidden">Закрепить</button>
+
+        <button id="addNoteButton" class="formButton hidden">Add</button>
+      </form>
+    </div>
+    <script src="index.js"></script>
+  </body>
+</html>
