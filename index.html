@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"
+      integrity="sha512-RXf+QSDCUQs5uwRKaDoXt55jygZZm2V++WUZduaU/Ui/9EGp3f/2KZVahFZBKGH0s774sd3HmrhUy+SgOFQLVQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,8 +14,28 @@
     <title>G keep</title>
   </head>
   <body>
+    <section class="sidebar">
+      <ul class="nav-list">
+        <li class="nav-list-item" id="liNotes">
+          <i class="fas fa-lightbulb"></i>
+          Notes
+        </li>
+        <li class="nav-list-item" id="liNotifications">
+          <i class="fas fa-bell"></i>
+          Notifications
+        </li>
+        <li class="nav-list-item" id="liArchive">
+          <i class="fas fa-archive"></i>
+          Archive
+        </li>
+        <li class="nav-list-item" id="liTrash">
+          <i class="fas fa-trash-alt"></i>
+          Trash bin
+        </li>
+      </ul>
+    </section>
     <div class="mainContainer" id="container">
-      <form id="mainInput" class="inputForm" autocomplete="off">
+      <form id="mainInput" class="inputForm blank" autocomplete="off">
         <input
           class="addNoteInput hidden"
           id="titleInput"
@@ -22,29 +48,44 @@
           placeholder="Заметка..."
           type="text"
         />
-        <button id="notificationBtn" class="formButton hidden">
-          Создать напоминание
-        </button>
-        <div class="colorBtnWrapper hidden">
-          <button id="colorBtn" class="formButton">Изменить цвет</button>
-          <input type="hidden" id="colorInput" />
+        <div class="buttonContainer hidden">
+          <button id="notificationBtn" class="formButton">
+            <i class="fas fa-bell"></i>
+            <!-- Создать напоминание -->
+          </button>
+          <div class="colorBtnWrapper">
+            <button id="colorBtn" class="formButton">
+              <i class="fas fa-palette"></i>
+              <!-- Изменить цвет -->
+            </button>
+            <input type="hidden" id="colorInput" />
 
-          <div id="colorPalette" class="colorPalette">
-            <div class="color red"></div>
-            <div class="color green"></div>
-            <div class="color yellow"></div>
-            <div class="color blue"></div>
-            <div class="color orange"></div>
-            <div class="color violet"></div>
-            <div class="color brown"></div>
-            <div class="color pink"></div>
-            <div class="color gray"></div>
+            <div id="colorPalette" class="colorPalette">
+              <div class="color blank" id="initialColor">
+                <i class="fas fa-check"></i>
+              </div>
+              <div class="color red"></div>
+              <div class="color green"></div>
+              <div class="color yellow"></div>
+              <div class="color blue"></div>
+              <div class="color orange"></div>
+              <div class="color violet"></div>
+              <div class="color brown"></div>
+              <div class="color pink"></div>
+              <div class="color gray"></div>
+            </div>
           </div>
-        </div>
-        <button id="archiveBtn" class="formButton hidden">Архивировать</button>
-        <button id="pinBtn" class="formButton hidden">Закрепить</button>
+          <button id="archiveBtn" class="formButton">
+            <i class="fas fa-archive"></i>
+            <!-- Архивировать -->
+          </button>
+          <button id="pinBtn" class="formButton">
+            <i class="fas fa-thumbtack"></i>
+            <!-- Закрепить -->
+          </button>
 
-        <button id="addNoteButton" class="formButton hidden">Add</button>
+          <button id="addNoteButton" class="formButton">Add</button>
+        </div>
       </form>
     </div>
     <script src="index.js"></script>

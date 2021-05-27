@@ -1,6 +1,12 @@
+body *,
+body {
+  margin: 0;
+  padding: 0;
+}
+
 .mainContainer {
   width: 500px;
-  margin: 0 auto;
+  margin: 20px auto;
 }
 
 .inputForm {
@@ -23,20 +29,35 @@
   outline: none;
 }
 
+.buttonContainer {
+  display: flex;
+}
+
 .formButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  width: 50px;
+  height: 50px;
   border: none;
-  padding: 10px 20px;
+  padding: 2px;
   background-color: transparent;
   cursor: pointer;
-  border-radius: 20px;
+  border-radius: 40px;
+  font-size: 17px;
+}
+
+.formButton .svg-inline--fa {
+  opacity: 0.5;
 }
 
 .formButton:hover {
-  background-color: rgba(0, 0, 0, 0.035);
+  background-color: rgba(0, 0, 0, 0.1);
 }
 
 .formButton:active {
-  background-color: #ccc;
+  background-color: rgba(0, 0, 0, 0.2);
 }
 
 .colorBtnWrapper {
@@ -52,7 +73,7 @@
 .colorPalette {
   opacity: 0;
   visibility: hidden;
-  width: 105px;
+  width: 137px;
   flex-wrap: wrap;
   display: flex;
   position: absolute;
@@ -65,6 +86,9 @@
 }
 
 .color {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   cursor: pointer;
   width: 27px;
   height: 27px;
@@ -80,7 +104,6 @@
 
 .note {
   padding: 20px;
-  border: 1px solid #666;
   margin-top: 20px;
   border-radius: 10px;
 }
@@ -89,37 +112,101 @@
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
 }
 
+.blank {
+  border: 1px solid #ddd;
+}
+
 .red {
-  background-color: crimson;
+  border: 1px solid transparent;
+  background-color: rgb(238, 84, 84);
 }
 
 .green {
+  border: 1px solid transparent;
   background-color: lightgreen;
 }
 
 .yellow {
-  background-color: yellow;
+  border: 1px solid transparent;
+  background-color: rgb(255, 255, 68);
 }
 
 .blue {
+  border: 1px solid transparent;
   background-color: lightskyblue;
 }
 .orange {
+  border: 1px solid transparent;
   background-color: orange;
 }
 .violet {
+  border: 1px solid transparent;
   background-color: violet;
 }
 .brown {
+  border: 1px solid transparent;
   background-color: burlywood;
 }
 .pink {
+  border: 1px solid transparent;
   background-color: pink;
 }
 .gray {
+  border: 1px solid transparent;
   background-color: lightgray;
 }
 
 .hidden {
   display: none;
+}
+
+.fa-check {
+  opacity: 0.25;
+  pointer-events: none;
+}
+
+.chosen {
+  color: #fff;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.chosen:hover {
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.chosen .svg-inline--fa {
+  opacity: 1;
+}
+
+.sidebar {
+  position: fixed;
+  height: 100%;
+  top: 0;
+  left: 0;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.nav-list {
+  list-style: none;
+  font-size: 30px;
+  padding: 0;
+}
+
+.nav-list-item {
+  padding: 20px;
+  cursor: pointer;
+  border-top-right-radius: 50px;
+  border-bottom-right-radius: 50px;
+}
+
+.nav-list-item * {
+  margin-right: 20px;
+}
+
+.nav-list-item .svg-inline--fa {
+  opacity: 0.6;
+}
+
+.nav-list-item:hover {
+  background-color: #ccc;
 }
