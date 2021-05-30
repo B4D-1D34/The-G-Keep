@@ -15,20 +15,24 @@
   </head>
   <body>
     <section class="sidebar">
-      <ul class="nav-list">
+      <ul class="nav-list" id="sidebar">
         <li class="nav-list-item" id="liNotes">
+          <input type="hidden" value="isPinned" />
           <i class="fas fa-lightbulb"></i>
           Notes
         </li>
         <li class="nav-list-item" id="liNotifications">
+          <input type="hidden" value="notification" />
           <i class="fas fa-bell"></i>
           Notifications
         </li>
         <li class="nav-list-item" id="liArchive">
+          <input type="hidden" value="isArchived" />
           <i class="fas fa-archive"></i>
           Archive
         </li>
         <li class="nav-list-item" id="liTrash">
+          <input type="hidden" value="isDeleted" />
           <i class="fas fa-trash-alt"></i>
           Trash bin
         </li>
@@ -87,7 +91,9 @@
           <button id="addNoteButton" class="formButton">Add</button>
         </div>
       </form>
+      <div id="note-list"></div>
     </div>
     <script src="index.js"></script>
+    <script src="noteInput.js"></script>
   </body>
 </html>

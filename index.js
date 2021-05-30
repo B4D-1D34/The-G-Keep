@@ -1,4 +1,5 @@
 const notes = JSON.parse(localStorage.getItem("Notes")) || [];
+let tab = "isPinned";
 
 class Note {
   constructor({
@@ -25,29 +26,46 @@ class Note {
 }
 
 class UI {
-  static displayNotes() {
-    const workspace = document.querySelector("#container");
+  static displayNotes(attr) {
+    const noteList = document.getElementById("note-list");
+    noteList.innerHTML = "";
 
     let arrToDisplay = notes;
-    const pinned = arrToDisplay.filter((note) => note.isPinned === "true");
-    console.log(`pinned`, pinned);
-    arrToDisplay = arrToDisplay.filter((note) => !pinned.includes(note));
+    const selectedByAttr = arrToDisplay.filter((note) => note[attr] === "true");
+    console.log(`selectedByAttr`, selectedByAttr);
+    arrToDisplay = arrToDisplay.filter(
+      (note) => !selectedByAttr.includes(note)
+    );
+    // debugger;
 
-    if (pinned.length) {
-      const pinHeader = document.createElement("h1");
-      pinHeader.innerText = "ЗАКРЕПЛЕННЫЕ";
-      workspace.appendChild(pinHeader);
-      pinned.forEach((note) => UI.addNote(note));
+    arrToDisplay = arrToDisplay.filter(
+      (note) => !note.isDeleted === true && note.isArchived !== "true"
+    );
+
+    console.log(`arrToDisplay`, arrToDisplay);
+
+    if (attr === "isArchived" || attr === "isDeleted") {
+      selectedByAttr.forEach((note) => UI.addNote(note));
     }
 
-    const allHeader = document.createElement("h1");
-    allHeader.innerText = "ДРУГИЕ ЗАМЕТКИ";
-    workspace.appendChild(allHeader);
-    arrToDisplay.forEach((note) => UI.addNote(note));
+    if (selectedByAttr.length && attr === "isPinned") {
+      const pinHeader = document.createElement("h1");
+      pinHeader.innerText = "Pinned";
+      noteList.appendChild(pinHeader);
+
+      selectedByAttr.forEach((note) => UI.addNote(note));
+
+      const allHeader = document.createElement("h1");
+      allHeader.innerText = "Other notes";
+      noteList.appendChild(allHeader);
+    }
+    if (attr === "isPinned") {
+      arrToDisplay.forEach((note) => UI.addNote(note));
+    }
   }
 
   static addNote(note) {
-    const workspace = document.querySelector("#container");
+    const noteList = document.getElementById("note-list");
 
     const record = document.createElement("div");
 
@@ -57,95 +75,38 @@ class UI {
     record.innerHTML = `
     ${note.title}</br>
     ${note.text}
+    <button class="formButton"><i class="far fa-times-circle"></i></button>
     `;
-    workspace.appendChild(record);
+    record.querySelector("button").addEventListener("click", () => {
+      if (note.isDeleted === "true") {
+        notes.splice(notes.indexOf(note), 1);
+        localStorage.setItem("Notes", JSON.stringify(notes));
+        UI.displayNotes(tab);
+        return;
+      }
+      console.log(`herei am`);
+      note.isDeleted = "true";
+      note.isPinned = "false";
+      note.isArchived = "false";
+      console.log(`note`, note);
+      notes.splice(notes.indexOf(note), 1, note);
+      localStorage.setItem("Notes", JSON.stringify(notes));
+      UI.displayNotes(tab);
+    });
+    noteList.appendChild(record);
   }
 }
 
-document.addEventListener("DOMContentLoaded", UI.displayNotes);
+document.addEventListener("DOMContentLoaded", UI.displayNotes(tab));
 
-const addButton = document.getElementById("addNoteButton");
+//sidebar tabs event listener
+const sidebar = document.getElementById("sidebar");
 
-const pinButton = document.getElementById("pinBtn");
-
-const archiveButton = document.getElementById("archiveBtn");
-
-const colorPalette = document.getElementById("colorPalette");
-
-const colorInput = document.getElementById("colorInput");
-
-const titleInput = document.getElementById("titleInput");
-
-const textInput = document.getElementById("textInput");
-
-const form = document.getElementById("mainInput");
-
-//color choise
-let recentColor = "blank";
-let targetEl = document.getElementById("initialColor");
-colorPalette.addEventListener("click", ({ target }) => {
-  if (target.className.includes("color ")) {
-    targetEl.innerHTML = "";
-
-    form.classList.remove(recentColor);
-    colorInput.value = target.className.slice(6);
-    targetEl = target;
-    targetEl.innerHTML = '<i class="fas fa-check"></i>';
-    recentColor = colorInput.value;
-    form.classList.add(recentColor);
+sidebar.addEventListener("click", ({ target }) => {
+  if (target.className.includes("nav-list-item")) {
+    [...sidebar.children].forEach((child) => child.classList.remove("chosen"));
+    target.classList.add("chosen");
+    tab = target.querySelector("input").value;
+    UI.displayNotes(tab);
   }
-});
-
-//input pin button
-pinButton.addEventListener("click", (e) => {
-  e.preventDefault();
-  if (pinButton.value === "true") {
-    pinButton.value = false;
-    pinButton.classList.remove("chosen");
-  } else {
-    pinButton.value = true;
-    pinButton.classList.add("chosen");
-  }
-});
-
-//input archive button
-archiveButton.addEventListener("click", (e) => {
-  e.preventDefault();
-  if (archiveButton.value === "true") {
-    archiveButton.value = false;
-    archiveButton.classList.remove("chosen");
-  } else {
-    archiveButton.value = true;
-    archiveButton.classList.add("chosen");
-  }
-});
-
-//extended view of input
-textInput.addEventListener("focus", () => {
-  const ch = [...form.children];
-  ch.forEach((el) => el.classList.remove("hidden"));
-});
-
-document.addEventListener("click", ({ target }) => {
-  if (!form.contains(target)) {
-    const ch = [...form.children];
-    const filteredCh = ch.filter((el) => el.id !== "textInput");
-    filteredCh.forEach((el) => el.classList.add("hidden"));
-  }
-});
-
-//creating note input button
-addButton.addEventListener("click", (e) => {
-  e.preventDefault();
-  const note = new Note({
-    text: textInput.value,
-    title: titleInput.value,
-    color: colorInput.value,
-    isPinned: pinButton.value,
-    isArchived: archiveButton.value,
-  });
-  UI.addNote(note);
-  notes.push(note);
-  localStorage.setItem("Notes", JSON.stringify(notes));
-  form.reset();
 });
