@@ -5,7 +5,7 @@ body {
 }
 
 .mainContainer {
-  width: 500px;
+  width: 900px;
   margin: 20px auto;
 }
 
@@ -13,6 +13,9 @@ body {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   border-radius: 10px;
   padding: 10px;
+  width: 500px;
+  margin: 20px auto;
+  box-sizing: border-box;
 }
 
 .addNoteInput {
@@ -210,4 +213,20 @@ body {
 
 .nav-list-item:hover {
   background-color: #ccc;
+}
+
+.trashMessageBox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.trashMessageBox button {
+  width: auto;
+  margin-left: 30px;
+}
+
+.note-list {
+  width: 500px;
+  margin: 20px auto;
 }

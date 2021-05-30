@@ -1,5 +1,7 @@
-const notes = JSON.parse(localStorage.getItem("Notes")) || [];
+let notes = JSON.parse(localStorage.getItem("Notes")) || [];
 let tab = "isPinned";
+const mainContainer = document.getElementById("container");
+const trashMessageBox = document.createElement("div");
 
 class Note {
   constructor({
@@ -27,11 +29,18 @@ class Note {
 
 class UI {
   static displayNotes(attr) {
+    console.log(`trashMessageBox`, trashMessageBox);
+    if (mainContainer.contains(trashMessageBox)) {
+      trashMessageBox.innerHTML = "";
+      mainContainer.removeChild(trashMessageBox);
+    }
+    form.classList.remove("hidden");
+
     const noteList = document.getElementById("note-list");
     noteList.innerHTML = "";
 
     let arrToDisplay = notes;
-    const selectedByAttr = arrToDisplay.filter((note) => note[attr] === "true");
+    const selectedByAttr = arrToDisplay.filter((note) => note[attr] === true);
     console.log(`selectedByAttr`, selectedByAttr);
     arrToDisplay = arrToDisplay.filter(
       (note) => !selectedByAttr.includes(note)
@@ -39,13 +48,35 @@ class UI {
     // debugger;
 
     arrToDisplay = arrToDisplay.filter(
-      (note) => !note.isDeleted === true && note.isArchived !== "true"
+      (note) => !note.isDeleted === true && !note.isArchived === true
     );
 
     console.log(`arrToDisplay`, arrToDisplay);
 
     if (attr === "isArchived" || attr === "isDeleted") {
+      form.classList.add("hidden");
+
       selectedByAttr.forEach((note) => UI.addNote(note));
+    }
+
+    if (attr === "isDeleted") {
+      trashMessageBox.classList.add("trashMessageBox");
+      const trashH2 = document.createElement("h2");
+      trashH2.innerText = "Заметки удаляются из корзины через 7 дней.";
+
+      if (selectedByAttr.length) {
+        const clearTrashButton = document.createElement("button");
+        clearTrashButton.classList.add("formButton");
+        clearTrashButton.innerText = "Очистить корзину";
+        clearTrashButton.addEventListener("click", () => {
+          notes = notes.filter((note) => !selectedByAttr.includes(note));
+          localStorage.setItem("Notes", JSON.stringify(notes));
+          UI.displayNotes(tab);
+        });
+        trashMessageBox.prepend(clearTrashButton);
+      }
+      trashMessageBox.prepend(trashH2);
+      mainContainer.prepend(trashMessageBox);
     }
 
     if (selectedByAttr.length && attr === "isPinned") {
@@ -55,9 +86,11 @@ class UI {
 
       selectedByAttr.forEach((note) => UI.addNote(note));
 
-      const allHeader = document.createElement("h1");
-      allHeader.innerText = "Other notes";
-      noteList.appendChild(allHeader);
+      if (arrToDisplay.length) {
+        const allHeader = document.createElement("h1");
+        allHeader.innerText = "Other notes";
+        noteList.appendChild(allHeader);
+      }
     }
     if (attr === "isPinned") {
       arrToDisplay.forEach((note) => UI.addNote(note));
@@ -75,24 +108,20 @@ class UI {
     record.innerHTML = `
     ${note.title}</br>
     ${note.text}
-    <button class="formButton"><i class="far fa-times-circle"></i></button>
+    <button class="formButton archive"><i class="fas fa-archive"></i></button>
+    <button class="formButton pin"><i class="fas fa-thumbtack"></i></button>
+    <button class="formButton delete"><i class="far fa-times-circle"></i></button>
     `;
-    record.querySelector("button").addEventListener("click", () => {
-      if (note.isDeleted === "true") {
-        notes.splice(notes.indexOf(note), 1);
-        localStorage.setItem("Notes", JSON.stringify(notes));
-        UI.displayNotes(tab);
-        return;
-      }
-      console.log(`herei am`);
-      note.isDeleted = "true";
-      note.isPinned = "false";
-      note.isArchived = "false";
-      console.log(`note`, note);
-      notes.splice(notes.indexOf(note), 1, note);
-      localStorage.setItem("Notes", JSON.stringify(notes));
-      UI.displayNotes(tab);
-    });
+
+    record.querySelector(".pin").addEventListener("click", () => pinNote(note));
+
+    record
+      .querySelector(".archive")
+      .addEventListener("click", () => archiveNote(note));
+
+    record
+      .querySelector(".delete")
+      .addEventListener("click", () => deleteNote(note));
     noteList.appendChild(record);
   }
 }

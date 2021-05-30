@@ -75,11 +75,11 @@ addButton.addEventListener("click", (e) => {
     text: textInput.value,
     title: titleInput.value,
     color: colorInput.value,
-    isPinned: pinButton.value,
-    isArchived: archiveButton.value,
+    isPinned: pinButton.value === "true" ? true : false,
+    isArchived: archiveButton.value === "true" ? true : false,
   });
   console.log(`note.isArchived`, note.isArchived);
-  if (note.isArchived === "true") {
+  if (note.isArchived === true) {
     note.isPinned = false;
   }
   notes.push(note);
