@@ -40,3 +40,20 @@ const deleteNote = (note) => {
   note.isArchived = false;
   recordChange(note);
 };
+
+const changeNoteColor = (note, target, initColor, actualNote) => {
+  if (target.className.includes("color ")) {
+    let noteColor = note.color;
+    initColor.innerHTML = "";
+
+    actualNote.classList.remove(noteColor);
+    note.color = target.className.slice(6);
+    initColor = target;
+    initColor.innerHTML = '<i class="fas fa-check"></i>';
+    noteColor = note.color;
+    actualNote.classList.add(noteColor);
+    notes.splice(notes.indexOf(note), 1, note);
+    localStorage.setItem("Notes", JSON.stringify(notes));
+  }
+  return initColor;
+};

@@ -102,16 +102,53 @@ class UI {
 
     const record = document.createElement("div");
 
-    record.classList.add("note");
-    record.classList.add(note.color);
+    // record.classList.add("note");
 
     record.innerHTML = `
-    ${note.title}</br>
-    ${note.text}
-    <button class="formButton archive"><i class="fas fa-archive"></i></button>
-    <button class="formButton pin"><i class="fas fa-thumbtack"></i></button>
-    <button class="formButton delete"><i class="far fa-times-circle"></i></button>
+    <div class="note">
+      <div class="noteTextWrapper">
+        <p class="noteTitle">${note.title}</p>
+        <p class="noteText">${note.text}</p>
+      </div>
+      <div class="buttonContainer">
+        <div class="colorBtnWrapper">
+            <button class="formButton">
+                <i class="fas fa-palette"></i>
+                <!-- Изменить цвет -->
+            </button>
+            <div class="colorPalette">
+                <div class="color blank"></div>
+                <div class="color red"></div>
+                <div class="color green"></div>
+                <div class="color yellow"></div>
+                <div class="color blue"></div>
+                <div class="color orange"></div>
+                <div class="color violet"></div>
+                <div class="color brown"></div>
+                <div class="color pink"></div>
+                <div class="color gray"></div>
+            </div>
+        </div>
+        <button class="formButton archive"><i class="fas fa-archive"></i></button>
+        <button class="formButton pin"><i class="fas fa-thumbtack"></i></button>
+        <button class="formButton delete"><i class="far fa-times-circle"></i></button>
+      </div>
+    </div>
     `;
+
+    const actualNote = record.querySelector(".note");
+
+    actualNote.classList.add(note.color);
+
+    let initColor = actualNote.querySelector(`.${note.color}`);
+    initColor.innerHTML = '<i class="fas fa-check"></i>';
+    record
+      .querySelector(".colorPalette")
+      .addEventListener(
+        "click",
+        ({ target }) =>
+          (initColor = changeNoteColor(note, target, initColor, actualNote))
+      );
 
     record.querySelector(".pin").addEventListener("click", () => pinNote(note));
 
@@ -122,6 +159,50 @@ class UI {
     record
       .querySelector(".delete")
       .addEventListener("click", () => deleteNote(note));
+
+    record.addEventListener("click", ({ target }) => {
+      if (record.querySelector(".buttonContainer").contains(target)) {
+        return;
+      }
+      // debugger;
+      record.classList.add("open");
+      const noteTitle = actualNote.querySelector(".noteTitle");
+      const noteText = actualNote.querySelector(".noteText");
+      if (noteTitle && noteText) {
+        const editTitleInput = document.createElement("input");
+        const editTextInput = document.createElement("input");
+        editTitleInput.classList.add("addNoteInput");
+        editTextInput.classList.add("addNoteInput");
+
+        noteTitle.replaceWith(editTitleInput);
+        noteText.replaceWith(editTextInput);
+        editTitleInput.placeholder = "Введите заголовок";
+        editTextInput.placeholder = "Заметка...";
+        editTitleInput.value = note.title;
+        editTextInput.value = note.text;
+        editTextInput.focus();
+        document.addEventListener("click", function closeEdit(e) {
+          if (e.target === noteTitle || e.target === noteText) {
+            return;
+          }
+          if (
+            !actualNote.contains(e.target) ||
+            (actualNote.querySelector(".buttonContainer").contains(e.target) &&
+              !actualNote.querySelector(".colorPalette").contains(e.target))
+          ) {
+            console.log(`note`, note);
+            console.log(`i'm here!`);
+            record.classList.remove("open");
+            note.title = editTitleInput.value;
+            note.text = editTextInput.value;
+            recordChange(note);
+            editTitleInput.replaceWith(noteTitle);
+            editTextInput.replaceWith(noteText);
+            e.currentTarget.removeEventListener(e.type, closeEdit);
+          }
+        });
+      }
+    });
     noteList.appendChild(record);
   }
 }
