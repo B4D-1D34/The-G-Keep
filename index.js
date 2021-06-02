@@ -102,8 +102,6 @@ class UI {
 
     const record = document.createElement("div");
 
-    // record.classList.add("note");
-
     record.innerHTML = `
     <div class="note">
       <div class="noteTextWrapper">
@@ -160,49 +158,10 @@ class UI {
       .querySelector(".delete")
       .addEventListener("click", () => deleteNote(note));
 
-    record.addEventListener("click", ({ target }) => {
-      if (record.querySelector(".buttonContainer").contains(target)) {
-        return;
-      }
-      // debugger;
-      record.classList.add("open");
-      const noteTitle = actualNote.querySelector(".noteTitle");
-      const noteText = actualNote.querySelector(".noteText");
-      if (noteTitle && noteText) {
-        const editTitleInput = document.createElement("input");
-        const editTextInput = document.createElement("input");
-        editTitleInput.classList.add("addNoteInput");
-        editTextInput.classList.add("addNoteInput");
+    record.addEventListener("click", ({ target }) =>
+      openEdit(record, target, note)
+    );
 
-        noteTitle.replaceWith(editTitleInput);
-        noteText.replaceWith(editTextInput);
-        editTitleInput.placeholder = "Введите заголовок";
-        editTextInput.placeholder = "Заметка...";
-        editTitleInput.value = note.title;
-        editTextInput.value = note.text;
-        editTextInput.focus();
-        document.addEventListener("click", function closeEdit(e) {
-          if (e.target === noteTitle || e.target === noteText) {
-            return;
-          }
-          if (
-            !actualNote.contains(e.target) ||
-            (actualNote.querySelector(".buttonContainer").contains(e.target) &&
-              !actualNote.querySelector(".colorPalette").contains(e.target))
-          ) {
-            console.log(`note`, note);
-            console.log(`i'm here!`);
-            record.classList.remove("open");
-            note.title = editTitleInput.value;
-            note.text = editTextInput.value;
-            recordChange(note);
-            editTitleInput.replaceWith(noteTitle);
-            editTextInput.replaceWith(noteText);
-            e.currentTarget.removeEventListener(e.type, closeEdit);
-          }
-        });
-      }
-    });
     noteList.appendChild(record);
   }
 }
