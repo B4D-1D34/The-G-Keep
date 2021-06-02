@@ -4,6 +4,25 @@ const pinButton = document.getElementById("pinBtn");
 
 const archiveButton = document.getElementById("archiveBtn");
 
+const notificationButton = document.getElementById("notificationBtn");
+
+const notificationEdit = document.querySelector(".notificationEdit");
+
+const notificationDate = document.getElementById("notificationDate");
+
+const notificationTime = document.getElementById("notificationTime");
+
+const existNotification = document.getElementById("existNotification");
+
+const existDate = document.getElementById("existDate");
+const existTime = document.getElementById("existTime");
+const existDateDiv = document.getElementById("existDateDiv");
+const existTimeDiv = document.getElementById("existTimeDiv");
+
+const saveNotificationBtn = document.getElementById("saveNotificationBtn");
+
+const deleteNotificationBtn = document.getElementById("deleteNotification");
+
 const colorPalette = document.getElementById("colorPalette");
 
 const colorInput = document.getElementById("colorInput");
@@ -13,6 +32,71 @@ const titleInput = document.getElementById("titleInput");
 const textInput = document.getElementById("textInput");
 
 const form = document.getElementById("mainInput");
+
+function viewNotificationEdit(e) {
+  e.preventDefault();
+  notificationEdit.classList.remove("hidden");
+  document.addEventListener("click", function qlose(e) {
+    if (
+      e.target === notificationButton ||
+      (existNotification.contains(e.target) &&
+        e.target !== deleteNotificationBtn)
+    ) {
+      return;
+    }
+    if (!notificationEdit.contains(e.target)) {
+      notificationEdit.classList.add("hidden");
+      console.log(`hello`);
+
+      e.currentTarget.removeEventListener(e.type, qlose);
+    }
+  });
+}
+
+notificationButton.addEventListener("click", viewNotificationEdit);
+
+existNotification.addEventListener("click", viewNotificationEdit);
+
+const error = document.createElement("div");
+error.classList.add("error");
+
+saveNotificationBtn.addEventListener("click", (e) => {
+  e.preventDefault();
+  //validation
+  const inputs = [notificationDate, notificationTime];
+  const emptyInputs = inputs.filter((input) => !input.value);
+  if (emptyInputs.length) {
+    error.innerText = `Заполните поле`;
+    emptyInputs.forEach((input, i) => {
+      if (i + 1 === emptyInputs.length) {
+        error.innerText += ` ${input.name}.`;
+      } else {
+        error.innerText += ` ${input.name}, `;
+      }
+    });
+    if (!notificationEdit.contains(error)) {
+      notificationEdit.appendChild(error);
+      setTimeout(() => {
+        error.remove();
+      }, 3000);
+    }
+    return;
+  }
+  //notification creation
+
+  existDate.value = notificationDate.value;
+  existTime.value = notificationTime.value;
+  existDateDiv.innerText = existDate.value;
+  existTimeDiv.innerText = existTime.value;
+  existNotification.classList.remove("hidden");
+});
+
+deleteNotificationBtn.addEventListener("click", (e) => {
+  e.preventDefault();
+  existTime.value = "";
+  existDate.value = "";
+  existNotification.classList.add("hidden");
+});
 
 //color choise
 let recentColor = "blank";
@@ -77,6 +161,13 @@ addButton.addEventListener("click", (e) => {
     color: colorInput.value,
     isPinned: pinButton.value === "true" ? true : false,
     isArchived: archiveButton.value === "true" ? true : false,
+    notification:
+      existDate.value === "" || existTime.value === ""
+        ? null
+        : {
+            date: existDate.value,
+            time: existTime.value,
+          },
   });
   console.log(`note.isArchived`, note.isArchived);
   if (note.isArchived === true) {
@@ -91,6 +182,8 @@ addButton.addEventListener("click", (e) => {
     child.classList.remove("chosen");
     child.value = "false";
   });
-
+  existTime.value = "";
+  existDate.value = "";
+  existNotification.classList.add("hidden");
   form.reset();
 });

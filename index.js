@@ -40,18 +40,21 @@ class UI {
     noteList.innerHTML = "";
 
     let arrToDisplay = notes;
-    const selectedByAttr = arrToDisplay.filter((note) => note[attr] === true);
+    const selectedByAttr = arrToDisplay.filter((note) => note[attr]);
     console.log(`selectedByAttr`, selectedByAttr);
     arrToDisplay = arrToDisplay.filter(
       (note) => !selectedByAttr.includes(note)
     );
-    // debugger;
 
     arrToDisplay = arrToDisplay.filter(
       (note) => !note.isDeleted === true && !note.isArchived === true
     );
 
     console.log(`arrToDisplay`, arrToDisplay);
+
+    if (attr === "notification") {
+      selectedByAttr.forEach((note) => UI.addNote(note));
+    }
 
     if (attr === "isArchived" || attr === "isDeleted") {
       form.classList.add("hidden");
