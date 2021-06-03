@@ -105,44 +105,76 @@ class UI {
 
     const record = document.createElement("div");
 
-    record.innerHTML = `
-    <div class="note">
-      <div class="noteTextWrapper">
-        <p class="noteTitle">${note.title}</p>
-        <p class="noteText">${note.text}</p>
-      </div>
-      <div class="buttonContainer">
-        <div class="colorBtnWrapper">
-            <button class="formButton">
-                <i class="fas fa-palette"></i>
-                <!-- Изменить цвет -->
-            </button>
-            <div class="colorPalette">
-                <div class="color blank"></div>
-                <div class="color red"></div>
-                <div class="color green"></div>
-                <div class="color yellow"></div>
-                <div class="color blue"></div>
-                <div class="color orange"></div>
-                <div class="color violet"></div>
-                <div class="color brown"></div>
-                <div class="color pink"></div>
-                <div class="color gray"></div>
-            </div>
-        </div>
-        <button class="formButton archive"><i class="fas fa-archive"></i></button>
-        <button class="formButton pin"><i class="fas fa-thumbtack"></i></button>
-        <button class="formButton delete"><i class="far fa-times-circle"></i></button>
-      </div>
-    </div>
-    `;
+    record.innerHTML = getNote(note);
 
     const actualNote = record.querySelector(".note");
 
     actualNote.classList.add(note.color);
 
+    const existNotification = record.querySelector(".existNotification");
+    const notificationEdit = record.querySelector(".notificationEdit");
+    const deleteNotificationBtn = record.querySelector(".deleteNotification");
+    const notificationBtn = record.querySelector(".notificationBtn");
+    const notificationDate = record.querySelector(".notificationDate");
+    const notificationTime = record.querySelector(".notificationTime");
+    const saveNotificationBtn = record.querySelector(".saveNotificationBtn");
+    const existDate = record.querySelector(".existDate");
+    const existTime = record.querySelector(".existTime");
+    const existDateDiv = record.querySelector(".existDateDiv");
+    const existTimeDiv = record.querySelector(".existTimeDiv");
+
+    if (existDate.value) {
+      existDateDiv.innerText = existDate.value;
+      existTimeDiv.innerText = existTime.value;
+      existNotification.classList.remove("hidden");
+    }
+
+    notificationBtn.addEventListener("click", (e) => {
+      viewNotificationEdit(
+        e,
+        notificationEdit,
+        notificationBtn,
+        existNotification,
+        deleteNotificationBtn
+      );
+    });
+
+    existNotification.addEventListener("click", (e) =>
+      viewNotificationEdit(
+        e,
+        notificationEdit,
+        notificationBtn,
+        existNotification,
+        deleteNotificationBtn
+      )
+    );
+
+    const error = document.createElement("div");
+    error.classList.add("error");
+
+    saveNotificationBtn.addEventListener("click", (e) =>
+      saveNotification(
+        e,
+        notificationDate,
+        notificationTime,
+        notificationEdit,
+        error,
+        existDate,
+        existTime,
+        existDateDiv,
+        existTimeDiv,
+        existNotification,
+        note
+      )
+    );
+
+    deleteNotificationBtn.addEventListener("click", (e) =>
+      deleteNotification(e, existTime, existDate, existNotification, note)
+    );
+
     let initColor = actualNote.querySelector(`.${note.color}`);
     initColor.innerHTML = '<i class="fas fa-check"></i>';
+
     record
       .querySelector(".colorPalette")
       .addEventListener(

@@ -38,6 +38,7 @@ const deleteNote = (note) => {
   note.isDeleted = true;
   note.isPinned = false;
   note.isArchived = false;
+  note.notification = null;
   recordChange(note);
 };
 
@@ -59,7 +60,10 @@ const changeNoteColor = (note, target, initColor, actualNote) => {
 };
 
 const openEdit = (record, target, note) => {
-  if (record.querySelector(".buttonContainer").contains(target)) {
+  if (
+    record.querySelector(".buttonContainer").contains(target) ||
+    record.querySelector(".existNotification").contains(target)
+  ) {
     return;
   }
   record.classList.add("open");
@@ -117,20 +121,138 @@ const closeEdit = (record, noteTitle, noteText, note) => {
     const actualNote = record.querySelector(".note");
     const editTitleInput = record.querySelectorAll("textarea")[0];
     const editTextInput = record.querySelectorAll("textarea")[1];
+    const existDate = record.querySelector(".existDate");
+    const existTime = record.querySelector(".existTime");
     if (
       !actualNote.contains(e.target) ||
       (actualNote.querySelector(".buttonContainer").contains(e.target) &&
-        !actualNote.querySelector(".colorPalette").contains(e.target))
+        !actualNote.querySelector(".colorBtnWrapper").contains(e.target) &&
+        !actualNote.querySelector(".notificationBtnWrapper").contains(e.target))
     ) {
       console.log(`note`, note);
       console.log(`i'm here!`);
       record.classList.remove("open");
       note.title = editTitleInput.value;
       note.text = editTextInput.value;
+      note.notification =
+        existDate.value === "" || existTime.value === ""
+          ? null
+          : {
+              date: existDate.value,
+              time: existTime.value,
+            };
       recordChange(note);
-      editTitleInput.replaceWith(noteTitle);
-      editTextInput.replaceWith(noteText);
       e.currentTarget.removeEventListener(e.type, q);
     }
   };
+};
+
+// NOTIFICATIONS
+
+const helperNotificationInsert = (note, param) => {
+  if (note.notification) {
+    return note.notification[param];
+  } else {
+    return "";
+  }
+};
+
+function viewNotificationEdit(
+  e,
+  notificationEdit,
+  notificationButton,
+  existNotification,
+  deleteNotificationBtn
+) {
+  e.preventDefault();
+  notificationEdit.classList.remove("hidden");
+  document.addEventListener("click", function qlose(e) {
+    if (
+      e.target === notificationButton ||
+      (existNotification.contains(e.target) &&
+        e.target !== deleteNotificationBtn)
+    ) {
+      return;
+    }
+    if (!notificationEdit.contains(e.target)) {
+      notificationEdit.classList.add("hidden");
+
+      e.currentTarget.removeEventListener(e.type, qlose);
+    }
+  });
+}
+
+const saveNotification = (
+  e,
+  notificationDate,
+  notificationTime,
+  notificationEdit,
+  error,
+  existDate,
+  existTime,
+  existDateDiv,
+  existTimeDiv,
+  existNotification,
+  note
+) => {
+  e.preventDefault();
+  //validation
+  const inputs = [notificationDate, notificationTime];
+  const emptyInputs = inputs.filter((input) => !input.value);
+  if (emptyInputs.length) {
+    error.innerText = `Заполните поле`;
+    emptyInputs.forEach((input, i) => {
+      if (i + 1 === emptyInputs.length) {
+        error.innerText += ` ${input.name}.`;
+      } else {
+        error.innerText += ` ${input.name}, `;
+      }
+    });
+    if (!notificationEdit.contains(error)) {
+      notificationEdit.appendChild(error);
+      setTimeout(() => {
+        error.remove();
+      }, 3000);
+    }
+    return;
+  }
+  //notification creation
+  //   debugger;
+
+  existDate.value = notificationDate.value;
+  existTime.value = notificationTime.value;
+  existDateDiv.innerText = existDate.value;
+  existTimeDiv.innerText = existTime.value;
+  existNotification.classList.remove("hidden");
+  note.notification =
+    existDate.value === "" || existTime.value === ""
+      ? null
+      : {
+          date: existDate.value,
+          time: existTime.value,
+        };
+  notes.splice(notes.indexOf(note), 1, note);
+  localStorage.setItem("Notes", JSON.stringify(notes));
+};
+
+const deleteNotification = (
+  e,
+  existTime,
+  existDate,
+  existNotification,
+  note
+) => {
+  e.preventDefault();
+  existTime.value = "";
+  existDate.value = "";
+  existNotification.classList.add("hidden");
+  note.notification =
+    existDate.value === "" || existTime.value === ""
+      ? null
+      : {
+          date: existDate.value,
+          time: existTime.value,
+        };
+  notes.splice(notes.indexOf(note), 1, note);
+  localStorage.setItem("Notes", JSON.stringify(notes));
 };
