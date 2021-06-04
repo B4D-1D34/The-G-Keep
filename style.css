@@ -45,6 +45,7 @@ body {
 
 .buttonContainer {
   display: inline-flex;
+  width: max-content;
 }
 
 .formButton {
@@ -84,7 +85,7 @@ body {
   position: absolute;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
   background-color: #fff;
-  z-index: 1;
+  z-index: 2;
 }
 
 .notificationEdit p {
@@ -194,6 +195,7 @@ body {
 
 .note:hover {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  z-index: 1;
 }
 
 .note .buttonContainer {
@@ -225,7 +227,7 @@ body {
   background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;

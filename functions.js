@@ -217,7 +217,6 @@ const saveNotification = (
     return;
   }
   //notification creation
-  //   debugger;
 
   existDate.value = notificationDate.value;
   existTime.value = notificationTime.value;
@@ -231,6 +230,7 @@ const saveNotification = (
           date: existDate.value,
           time: existTime.value,
         };
+  setNotificationTimer(note);
   notes.splice(notes.indexOf(note), 1, note);
   localStorage.setItem("Notes", JSON.stringify(notes));
 };
@@ -253,6 +253,23 @@ const deleteNotification = (
           date: existDate.value,
           time: existTime.value,
         };
+  clearInterval(note.timer);
   notes.splice(notes.indexOf(note), 1, note);
   localStorage.setItem("Notes", JSON.stringify(notes));
+};
+
+const setNotificationTimer = (note) => {
+  const time = new Date(note.notification.date + "T" + note.notification.time);
+  console.log(time);
+  const leftToNotify = time.getTime() - Date.now();
+  if (note.timer) {
+    clearInterval(note.timer);
+  }
+  note.timer = setTimeout(() => {
+    alert(`${note.text} time is now!!!`);
+  }, leftToNotify);
+  console.log(note, leftToNotify);
+  if (leftToNotify < 0) {
+    clearInterval(note.timer);
+  }
 };

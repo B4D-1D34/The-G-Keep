@@ -24,6 +24,7 @@ class Note {
     this.isList = isList || false;
     this.tags = tags || [];
     this.notification = notification || null;
+    this.timer;
   }
 }
 
@@ -40,6 +41,12 @@ class UI {
     noteList.innerHTML = "";
 
     let arrToDisplay = notes;
+
+    const notifications = notes.filter((note) => note.notification);
+    notifications.forEach((note) => {
+      setNotificationTimer(note);
+    });
+
     const selectedByAttr = arrToDisplay.filter((note) => note[attr]);
     console.log(`selectedByAttr`, selectedByAttr);
     arrToDisplay = arrToDisplay.filter(
