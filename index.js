@@ -2,6 +2,7 @@ let notes = JSON.parse(localStorage.getItem("Notes")) || [];
 let tab = "isPinned";
 const mainContainer = document.getElementById("container");
 const trashMessageBox = document.createElement("div");
+let restoreData;
 
 class Note {
   constructor({
@@ -175,9 +176,17 @@ class UI {
       )
     );
 
-    deleteNotificationBtn.addEventListener("click", (e) =>
-      deleteNotification(e, existTime, existDate, existNotification, note)
-    );
+    deleteNotificationBtn.addEventListener("click", (e) => {
+      restoreData = {
+        param: note.notification,
+        note,
+        paramname: "notification",
+      };
+
+      deleteNotification(e, existTime, existDate, existNotification, note);
+
+      viewChangeNotification("Notification is deleted");
+    });
 
     let initColor = actualNote.querySelector(`.${note.color}`);
     initColor.innerHTML = '<i class="fas fa-check"></i>';
@@ -192,13 +201,26 @@ class UI {
 
     record.querySelector(".pin").addEventListener("click", () => pinNote(note));
 
-    record
-      .querySelector(".archive")
-      .addEventListener("click", () => archiveNote(note));
+    record.querySelector(".archive").addEventListener("click", () => {
+      restoreData = {
+        param: note.isArchived,
+        note,
+        paramname: "isArchived",
+      };
 
-    record
-      .querySelector(".delete")
-      .addEventListener("click", () => deleteNote(note));
+      archiveNote(note);
+      viewChangeNotification("Note is in the archive now");
+    });
+
+    record.querySelector(".delete").addEventListener("click", () => {
+      restoreData = {
+        param: note.isDeleted,
+        note,
+        paramname: "isDeleted",
+      };
+      deleteNote(note);
+      viewChangeNotification("Note is in the trash bin now");
+    });
 
     record.addEventListener("click", ({ target }) =>
       openEdit(record, target, note)
@@ -220,4 +242,38 @@ sidebar.addEventListener("click", ({ target }) => {
     tab = target.querySelector("input").value;
     UI.displayNotes(tab);
   }
+});
+
+let changeNotificationTimer;
+const viewChangeNotification = (changeText) => {
+  clearInterval(changeNotificationTimer);
+  console.log(`timetime time`);
+  changeInfo.innerText = changeText;
+  changeNotification.classList.remove("hidden");
+  changeNotificationTimer = setTimeout(() => {
+    changeNotification.classList.add("hidden");
+  }, 10000);
+};
+const changeNotification = document.querySelector(".changeNotification");
+const declineChangeBtn = changeNotification.querySelector("#declineChange");
+const closeChange = changeNotification.querySelector("#closeChange");
+const changeInfo = changeNotification.querySelector("#changeInfo");
+
+changeNotification.addEventListener("mouseenter", () => {
+  console.log(`cleared`);
+  clearInterval(changeNotificationTimer);
+});
+
+changeNotification.addEventListener("mouseleave", () =>
+  viewChangeNotification(changeInfo.innerText)
+);
+
+declineChangeBtn.addEventListener("click", () => {
+  restoreChange(restoreData);
+  viewChangeNotification("Change declined");
+});
+
+closeChange.addEventListener("click", () => {
+  changeNotification.classList.add("hidden");
+  console.log(`i work`);
 });

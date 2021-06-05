@@ -369,3 +369,21 @@ body {
   width: 500px;
   margin: 20px auto;
 }
+
+.changeNotification {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  min-width: 300px;
+  width: max-content;
+  height: max-content;
+  position: fixed;
+  left: 30px;
+  bottom: 30px;
+  background-color: rgba(0, 0, 0, 0.75);
+  color: #eee;
+  padding: 20px 40px;
+  z-index: 3;
+}

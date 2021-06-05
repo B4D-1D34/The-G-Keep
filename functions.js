@@ -273,3 +273,8 @@ const setNotificationTimer = (note) => {
     clearInterval(note.timer);
   }
 };
+
+const restoreChange = ({ param, note, paramname }) => {
+  note[paramname] = param;
+  recordChange(note);
+};
