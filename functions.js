@@ -1,5 +1,5 @@
-const recordChange = (note) => {
-  notes.splice(notes.indexOf(note), 1, note);
+const recordChange = (note, beforeChange = note) => {
+  notes.splice(notes.indexOf(note), 1, beforeChange);
   localStorage.setItem("Notes", JSON.stringify(notes));
   UI.displayNotes(tab);
 };
@@ -62,7 +62,8 @@ const changeNoteColor = (note, target, initColor, actualNote) => {
 const openEdit = (record, target, note) => {
   if (
     record.querySelector(".buttonContainer").contains(target) ||
-    record.querySelector(".existNotification").contains(target)
+    record.querySelector(".existNotification").contains(target) ||
+    changeNotification.contains(target)
   ) {
     return;
   }
@@ -124,7 +125,8 @@ const closeEdit = (record, noteTitle, noteText, note) => {
     const existDate = record.querySelector(".existDate");
     const existTime = record.querySelector(".existTime");
     if (
-      !actualNote.contains(e.target) ||
+      (!actualNote.contains(e.target) &&
+        !changeNotification.contains(e.target)) ||
       (actualNote.querySelector(".buttonContainer").contains(e.target) &&
         !actualNote.querySelector(".colorBtnWrapper").contains(e.target) &&
         !actualNote.querySelector(".notificationBtnWrapper").contains(e.target))
@@ -274,7 +276,14 @@ const setNotificationTimer = (note) => {
   }
 };
 
-const restoreChange = ({ param, note, paramname }) => {
-  note[paramname] = param;
-  recordChange(note);
+const restoreChange = ({ beforeChange, note, noRefresh }) => {
+  debugger;
+  // if (noRefresh) {
+  //   notes.splice(notes.indexOf(note), 1, beforeChange);
+  //   localStorage.setItem("Notes", JSON.stringify(notes));
+  //   note = { ...beforeChange };
+  //   return;
+  // }
+
+  recordChange(note, beforeChange);
 };

@@ -177,11 +177,7 @@ class UI {
     );
 
     deleteNotificationBtn.addEventListener("click", (e) => {
-      restoreData = {
-        param: note.notification,
-        note,
-        paramname: "notification",
-      };
+      restoreData = { beforeChange: { ...note }, note, noRefresh: true };
 
       deleteNotification(e, existTime, existDate, existNotification, note);
 
@@ -202,22 +198,14 @@ class UI {
     record.querySelector(".pin").addEventListener("click", () => pinNote(note));
 
     record.querySelector(".archive").addEventListener("click", () => {
-      restoreData = {
-        param: note.isArchived,
-        note,
-        paramname: "isArchived",
-      };
+      restoreData = { beforeChange: { ...note }, note };
 
       archiveNote(note);
       viewChangeNotification("Note is in the archive now");
     });
 
     record.querySelector(".delete").addEventListener("click", () => {
-      restoreData = {
-        param: note.isDeleted,
-        note,
-        paramname: "isDeleted",
-      };
+      restoreData = { beforeChange: { ...note }, note };
       deleteNote(note);
       viewChangeNotification("Note is in the trash bin now");
     });
@@ -244,12 +232,17 @@ sidebar.addEventListener("click", ({ target }) => {
   }
 });
 
+//NOTIFY AND RESTORE
+
 let changeNotificationTimer;
 const viewChangeNotification = (changeText) => {
   clearInterval(changeNotificationTimer);
   console.log(`timetime time`);
   changeInfo.innerText = changeText;
   changeNotification.classList.remove("hidden");
+  if (changeText !== "Change declined") {
+    declineChangeBtn.classList.remove("hidden");
+  }
   changeNotificationTimer = setTimeout(() => {
     changeNotification.classList.add("hidden");
   }, 10000);
@@ -264,16 +257,23 @@ changeNotification.addEventListener("mouseenter", () => {
   clearInterval(changeNotificationTimer);
 });
 
-changeNotification.addEventListener("mouseleave", () =>
-  viewChangeNotification(changeInfo.innerText)
-);
+changeNotification.addEventListener("mouseleave", () => {
+  if (closingEvent) {
+    closingEvent = false;
+    return;
+  }
+  viewChangeNotification(changeInfo.innerText);
+});
 
 declineChangeBtn.addEventListener("click", () => {
   restoreChange(restoreData);
   viewChangeNotification("Change declined");
+  declineChangeBtn.classList.add("hidden");
 });
 
+let closingEvent;
 closeChange.addEventListener("click", () => {
+  closingEvent = true;
   changeNotification.classList.add("hidden");
   console.log(`i work`);
 });
