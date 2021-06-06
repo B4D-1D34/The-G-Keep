@@ -62,8 +62,9 @@ const changeNoteColor = (note, target, initColor, actualNote) => {
 const openEdit = (record, target, note) => {
   if (
     record.querySelector(".buttonContainer").contains(target) ||
-    record.querySelector(".existNotification").contains(target) ||
-    changeNotification.contains(target)
+    record.querySelector(".existNotification").contains(target)
+    // ||
+    // changeNotification.contains(target)
   ) {
     return;
   }
@@ -144,6 +145,7 @@ const closeEdit = (record, noteTitle, noteText, note) => {
               time: existTime.value,
             };
       recordChange(note);
+      restoreData["open"] = false;
       e.currentTarget.removeEventListener(e.type, q);
     }
   };
@@ -276,14 +278,15 @@ const setNotificationTimer = (note) => {
   }
 };
 
-const restoreChange = ({ beforeChange, note, noRefresh }) => {
-  debugger;
-  // if (noRefresh) {
-  //   notes.splice(notes.indexOf(note), 1, beforeChange);
-  //   localStorage.setItem("Notes", JSON.stringify(notes));
-  //   note = { ...beforeChange };
-  //   return;
-  // }
+const restoreChange = ({ beforeChange, note, ...args }) => {
+  if (args.notification && args.open) {
+    args.notification.existNotification.classList.remove("hidden");
+    args.notification.existTime.value = beforeChange.notification.time;
+    args.notification.existDate.value = beforeChange.notification.date;
+    note.notification = beforeChange.notification;
+    setNotificationTimer(note);
+    return;
+  }
 
   recordChange(note, beforeChange);
 };

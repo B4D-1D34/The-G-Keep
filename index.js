@@ -2,7 +2,7 @@ let notes = JSON.parse(localStorage.getItem("Notes")) || [];
 let tab = "isPinned";
 const mainContainer = document.getElementById("container");
 const trashMessageBox = document.createElement("div");
-let restoreData;
+let restoreData = {};
 
 class Note {
   constructor({
@@ -177,7 +177,11 @@ class UI {
     );
 
     deleteNotificationBtn.addEventListener("click", (e) => {
-      restoreData = { beforeChange: { ...note }, note, noRefresh: true };
+      restoreData = {
+        beforeChange: { ...note },
+        note,
+        notification: { existTime, existDate, existNotification },
+      };
 
       deleteNotification(e, existTime, existDate, existNotification, note);
 
@@ -210,9 +214,12 @@ class UI {
       viewChangeNotification("Note is in the trash bin now");
     });
 
-    record.addEventListener("click", ({ target }) =>
-      openEdit(record, target, note)
-    );
+    record.addEventListener("click", ({ target }) => {
+      openEdit(record, target, note);
+      if (record.className.includes("open")) {
+        restoreData["open"] = true;
+      }
+    });
 
     noteList.appendChild(record);
   }
@@ -228,6 +235,7 @@ sidebar.addEventListener("click", ({ target }) => {
     [...sidebar.children].forEach((child) => child.classList.remove("chosen"));
     target.classList.add("chosen");
     tab = target.querySelector("input").value;
+    changeNotification.classList.add("hidden");
     UI.displayNotes(tab);
   }
 });
@@ -275,5 +283,4 @@ let closingEvent;
 closeChange.addEventListener("click", () => {
   closingEvent = true;
   changeNotification.classList.add("hidden");
-  console.log(`i work`);
 });

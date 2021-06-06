@@ -25,6 +25,9 @@ const deleteNotificationBtn = document.getElementById("deleteNotification");
 
 const colorPalette = document.getElementById("colorPalette");
 
+const colorButton = document.getElementById("colorBtn");
+colorButton.addEventListener("click", (e) => e.preventDefault());
+
 const colorInput = document.getElementById("colorInput");
 
 const titleInput = document.getElementById("titleInput");
