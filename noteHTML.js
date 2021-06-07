@@ -79,3 +79,16 @@ const getNote = (note) => {
     </div>
     `;
 };
+
+const getDeletedNote = (note) => {
+  return `<div class="note">
+  <div class="noteTextWrapper">
+    <p class="noteTitle">${note.title}</p>
+    <p class="noteText">${note.text}</p>
+  </div>
+  <div class="buttonContainer">
+    <button class="formButton restore"><i class="fas fa-trash-restore"></i></button>
+    <button class="formButton delete"><i class="far fa-times-circle"></i></button>
+  </div>
+</div>`;
+};

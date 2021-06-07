@@ -20,12 +20,26 @@ const archiveNote = (note) => {
   if (note.isArchived === true) {
     note.isArchived = false;
     recordChange(note);
-
+    viewChangeNotification("Note has been restored from the archive");
     return;
   }
   note.isPinned = false;
   note.isArchived = true;
   recordChange(note);
+  viewChangeNotification("Note is in the archive now");
+};
+
+const restoreNote = (note) => {
+  note.isDeleted = false;
+  if (note.from === "Archive") {
+    note.isArchived = true;
+    note.from = "";
+    recordChange(note);
+    viewChangeNotification("Note is restored to the archive");
+    return;
+  }
+  recordChange(note);
+  viewChangeNotification("Note is restored");
 };
 
 const deleteNote = (note) => {
@@ -35,11 +49,15 @@ const deleteNote = (note) => {
     UI.displayNotes(tab);
     return;
   }
+  if (note.isArchived) {
+    note.from = "Archive";
+  }
   note.isDeleted = true;
   note.isPinned = false;
   note.isArchived = false;
   note.notification = null;
   recordChange(note);
+  viewChangeNotification("Note is in the trash bin now");
 };
 
 const changeNoteColor = (note, target, initColor, actualNote) => {
@@ -63,8 +81,6 @@ const openEdit = (record, target, note) => {
   if (
     record.querySelector(".buttonContainer").contains(target) ||
     record.querySelector(".existNotification").contains(target)
-    // ||
-    // changeNotification.contains(target)
   ) {
     return;
   }

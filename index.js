@@ -64,13 +64,14 @@ class UI {
       selectedByAttr.forEach((note) => UI.addNote(note));
     }
 
-    if (attr === "isArchived" || attr === "isDeleted") {
+    if (attr === "isArchived") {
       form.classList.add("hidden");
 
       selectedByAttr.forEach((note) => UI.addNote(note));
     }
 
     if (attr === "isDeleted") {
+      form.classList.add("hidden");
       trashMessageBox.classList.add("trashMessageBox");
       const trashH2 = document.createElement("h2");
       trashH2.innerText = "Заметки удаляются из корзины через 7 дней.";
@@ -88,6 +89,7 @@ class UI {
       }
       trashMessageBox.prepend(trashH2);
       mainContainer.prepend(trashMessageBox);
+      selectedByAttr.forEach((note) => UI.addDeletedNote(note));
     }
 
     if (selectedByAttr.length && attr === "isPinned") {
@@ -106,6 +108,29 @@ class UI {
     if (attr === "isPinned") {
       arrToDisplay.forEach((note) => UI.addNote(note));
     }
+  }
+
+  static addDeletedNote(note) {
+    const noteList = document.getElementById("note-list");
+
+    const record = document.createElement("div");
+
+    record.innerHTML = getDeletedNote(note);
+
+    const actualNote = record.querySelector(".note");
+
+    actualNote.classList.add(note.color);
+
+    record.querySelector(".restore").addEventListener("click", () => {
+      restoreData = { beforeChange: { ...note }, note };
+      restoreNote(note);
+    });
+
+    record.querySelector(".delete").addEventListener("click", () => {
+      restoreData = { beforeChange: { ...note }, note };
+      deleteNote(note);
+    });
+    noteList.appendChild(record);
   }
 
   static addNote(note) {
@@ -203,15 +228,12 @@ class UI {
 
     record.querySelector(".archive").addEventListener("click", () => {
       restoreData = { beforeChange: { ...note }, note };
-
       archiveNote(note);
-      viewChangeNotification("Note is in the archive now");
     });
 
     record.querySelector(".delete").addEventListener("click", () => {
       restoreData = { beforeChange: { ...note }, note };
       deleteNote(note);
-      viewChangeNotification("Note is in the trash bin now");
     });
 
     record.addEventListener("click", ({ target }) => {
